@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-b1 = KeyboardButton('/Ish_tartibi')
-b2 = KeyboardButton('/Manzil')
+b1 = KeyboardButton('Ish tartibi ⏰')
+b2 = KeyboardButton('Manzil 🗺')
 b3 = KeyboardButton('/Menyu')
 b4 = KeyboardButton("Telefon raqamingizni yuboring", request_contact=True)
 b5 = KeyboardButton("Joylashgan joyingiz", request_location=True)

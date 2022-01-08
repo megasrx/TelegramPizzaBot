@@ -23,5 +23,5 @@ async def pizza_place_command(message: types.Message):
 
 def register_handlers_client(dispatcher: Dispatcher):
     dispatcher.register_message_handler(command_start, commands=['start', 'help'])
-    dispatcher.register_message_handler(pizza_open_command, commands=['Ish_tartibi'])
-    dispatcher.register_message_handler(pizza_place_command, commands=['Manzil'])
+    dispatcher.register_message_handler(pizza_open_command, lambda message: 'Ish tartibi' in message.text)
+    dispatcher.register_message_handler(pizza_place_command, lambda message: 'Manzil' in message.text)
