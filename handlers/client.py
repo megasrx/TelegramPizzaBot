@@ -1,11 +1,12 @@
 from aiogram import types, Dispatcher
 from config import telegram_bot_username
 from create_bot import dp, bot
+from keyboards import kb_client
 
 
 async def command_start(message: types.Message):
     try:
-        await bot.send_message(message.from_user.id, "Salom! Yoqimli ishataha")
+        await bot.send_message(message.from_user.id, "Salom! Yoqimli ishataha", reply_markup=kb_client)
         await message.delete()
     except:
         await message.reply(
