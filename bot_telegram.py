@@ -3,10 +3,12 @@ from create_bot import dp
 from handlers import client
 from handlers import admin
 from handlers import others
+from data_base import sqlite_db
 
 
 async def on_startup(_):
     print("Bot online rejimda ishlamoqda.")
+    sqlite_db.sql_start()
 
 admin.register_handlers_client(dp)
 client.register_handlers_client(dp)

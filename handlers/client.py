@@ -2,6 +2,7 @@ from aiogram import types, Dispatcher
 from config import telegram_bot_username
 from create_bot import dp, bot
 from keyboards import kb_client
+from data_base.sqlite_db import sql_read_command
 
 
 async def command_start(message: types.Message):
@@ -21,7 +22,12 @@ async def pizza_place_command(message: types.Message):
     await bot.send_message(message.from_user.id, "Toshkent shahri")
 
 
+async def pizza_menu_command(message: types.Message):
+    await sql_read_command(message)
+
+
 def register_handlers_client(dispatcher: Dispatcher):
     dispatcher.register_message_handler(command_start, commands=['start', 'help'])
     dispatcher.register_message_handler(pizza_open_command, lambda message: 'Ish tartibi' in message.text)
     dispatcher.register_message_handler(pizza_place_command, lambda message: 'Manzil' in message.text)
+    dispatcher.register_message_handler(pizza_menu_command, lambda message: 'Menyu' in message.text)
