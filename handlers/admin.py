@@ -3,8 +3,9 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram import types, Dispatcher
 from create_bot import dp, bot
-from data_base.sqlite_db import sql_add_command
+from data_base.sqlite_db import sql_add_command, sql_read2, sql_delete
 from keyboards import admin_keyboard
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 ID = None
 
@@ -71,6 +72,20 @@ async def load_price(message: types.Message, state: FSMContext):
         await state.finish()
 
 
+async def del_callback_run(callback_query: types.CallbackQuery):
+    await sql_delete(callback_query.data.replace('del ', ''))
+    await callback_query.answer(text=f'{callback_query.data.replace("del ", "")} o\'chirildi.', show_alert=True)
+
+
+async def delete_item(message: types.Message):
+    if message.from_user.id == ID:
+        read = await sql_read2()
+        for ret in read:
+            await bot.send_photo(message.from_user.id, ret[0], f'{ret[1]}\nTa\'vsifi: {ret[2]}\nNarxi: {ret[-1]}')
+            await bot.send_message(message.from_user.id, text="^^^", reply_markup=InlineKeyboardMarkup().\
+                                   add(InlineKeyboardButton(f'{ret[1]} ni O\'chirish', callback_data=f'del {ret[1]}')))
+
+
 def register_handlers_client(dispatcher: Dispatcher):
     dispatcher.register_message_handler(cm_start, commands=['Yuklash'], state=None)
     dispatcher.register_message_handler(cancel_handler, state="*", commands=['Bekor_qilish'])
@@ -80,3 +95,5 @@ def register_handlers_client(dispatcher: Dispatcher):
     dispatcher.register_message_handler(load_description, state=FSMAdmin.description)
     dispatcher.register_message_handler(load_price, state=FSMAdmin.price)
     dispatcher.register_message_handler(make_changes_command, commands=['moderator'], is_chat_admin=True)
+    dispatcher.register_message_handler(delete_item, lambda message: "O'chirish" in message.text)
+    dispatcher.register_callback_query_handler(del_callback_run, lambda x: x.data and x.data.startswith('del '))
